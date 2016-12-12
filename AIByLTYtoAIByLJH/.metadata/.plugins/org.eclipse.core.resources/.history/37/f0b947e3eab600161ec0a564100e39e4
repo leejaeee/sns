@@ -1,0 +1,53 @@
+package main;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import database.DBConnect;
+
+
+public class FIleFTPImportDataMain {
+
+	static int totalNowWorkCount = 0;
+		
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		if(args.length < 1){
+			System.out.println("매개변수가 없어 종료합니다....");
+			System.exit(1);
+		}
+		
+		String propertyPath  = args[0];
+		
+		String dbTable = "mli";
+		
+		/** DB 접속 */
+		File propertyFile = new File(propertyPath);
+		Properties props = new Properties();
+		InputStream propertyFis;
+		
+		try {
+			propertyFis = new FileInputStream(propertyFile);
+			props.load(propertyFis);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		propertyFile = null;
+		propertyFis = null;
+		
+		DBConnect dbConnect = new DBConnect(); 
+		dbConnect.initDB("mysql",props);
+		
+		
+		
+	}
+
+}

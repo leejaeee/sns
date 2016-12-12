@@ -1,0 +1,5 @@
+package etc;
+
+public class util {
+	public static String propertyPath= "";
+}

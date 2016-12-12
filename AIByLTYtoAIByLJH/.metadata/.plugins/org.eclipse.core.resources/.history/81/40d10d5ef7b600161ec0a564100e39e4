@@ -1,0 +1,176 @@
+package etc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Properties;
+
+import model.OracleTBStorg;
+
+public class DBConnect {
+	
+	Connection conn;
+	PreparedStatement psmt;
+	ResultSet rs;
+	
+	OutputProcess op = new OutputProcess();
+	
+	
+	public void initDB(String dbType, Properties props){
+		try {
+			if("mysql".equals(dbType)){
+				
+				Class.forName(props.getProperty("mysql.jdbc.driverClassName"));
+				
+				conn = null;
+				conn = DriverManager.getConnection(
+						props.getProperty("mysql.jdbc.url"),
+						props.getProperty("mysql.jdbc.username"),
+						props.getProperty("mysql.jdbc.password"));
+				System.out.println("Mysql DB Connect..");
+			}else if("oracle".equals(dbType)){
+				Class.forName(props.getProperty("oracle.jdbc.driverClassName"));
+				
+				conn = null;
+				conn = DriverManager.getConnection(
+						props.getProperty("oracle.jdbc.url"),
+						props.getProperty("oracle.jdbc.username"),
+						props.getProperty("oracle.jdbc.password"));
+				System.out.println("Oracle DB Connect..");
+			}else{
+				System.out.println("Err : InitDB Type Input Error");
+			}
+		
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void insert(String query){
+		try {
+			psmt = null;
+			psmt = conn.prepareStatement(query);
+			psmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("¿À·ù³² : " + e);
+			//OutputProcess.errorLog("Err Query | "+query);
+			if(query.length() >= 300)
+				query = query.substring(0,300);
+			op.errorLog("Err Query | "+e );
+			op.errorLog("\t\t"+query + " ...");
+		} 
+	}
+
+	public int workLogGetId(String workNM){
+		int idNum = 0;
+		try {
+			psmt = null;
+			psmt = conn.prepareStatement("SELECT ID FROM worklog where WORK_NM = '"+workNM
+					+"' and state=0 and PID is null "
+					+ "order by id desc" );
+			rs = null;
+			rs = psmt.executeQuery();
+			while (rs.next()) {
+				idNum = rs.getInt(1);
+				break;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return idNum;
+	}
+
+	public ArrayList<OracleTBStorg> oracle_TB_STORG_List(String cyoc){
+		ArrayList<OracleTBStorg> otbStoreList = new ArrayList<OracleTBStorg>();
+		try {
+			psmt = null;
+			System.out.println("Make TB_STORG List..");
+			psmt = conn.prepareStatement("select * from TB_STORG");
+			rs = null;
+			rs = psmt.executeQuery();
+			OracleTBStorg otbs = null;
+			String recordCenterId;
+			String orgCd;
+			String orgNm;
+			String orgAbbrNm;
+			String fullOrgNm;
+			String hupperOrgCd;
+			String upperOrgCd;
+			String levl;
+			String orgSeq;
+			String closeFlag;
+			String applyStartYmd;
+			String applyCloseYmd;
+			String takeOrgFlag;
+			String linkTrgtId;
+			String takeTakovrMngNo;
+			int count = 0;
+			while (rs.next()) {
+				otbs = new OracleTBStorg();
+				recordCenterId = rs.getString(1);
+				orgCd = rs.getString(2);
+				orgNm = rs.getString(3);
+				orgAbbrNm = rs.getString(4);
+				fullOrgNm = rs.getString(5);
+				hupperOrgCd = rs.getString(6);
+				upperOrgCd = rs.getString(7);
+				levl = rs.getString(8);
+				orgSeq = rs.getString(9);
+				closeFlag = rs.getString(10);
+				applyStartYmd = rs.getString(11);
+				applyCloseYmd = rs.getString(12);
+				takeOrgFlag = rs.getString(13);
+				linkTrgtId = rs.getString(14);
+				takeTakovrMngNo = rs.getString(15);
+				System.out.println("   ~~" + orgCd + " , " + orgNm);
+				otbs.setApplyCloseYmd(applyCloseYmd);
+				otbs.setApplyStartYmd(applyStartYmd);
+				otbs.setCloseFlag(closeFlag);
+				otbs.setFullOrgNm(fullOrgNm);
+				otbs.setHupperOrgCd(hupperOrgCd);
+				otbs.setLevl(levl);
+				otbs.setLinkTrgtId(linkTrgtId);
+				otbs.setOrgAbbrNm(orgAbbrNm);
+				otbs.setOrgCd(upperOrgCd);
+				otbs.setOrgNm(fullOrgNm);
+				otbs.setOrgSeq(orgSeq);
+				otbs.setRecordCenterId(recordCenterId);
+				otbs.setTakeOrgFlag(takeOrgFlag);
+				otbs.setTakeTakovrMngNo(takeTakovrMngNo);
+				otbs.setUpperOrgCd(upperOrgCd);
+				otbStoreList.add(otbs);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return otbStoreList;
+	}
+
+	public void closeDB(){
+		try {
+			if(rs != null){
+				rs.close();
+				rs = null;
+			}
+			if(psmt != null){
+				psmt.close();
+				psmt = null;
+			}
+			if(conn != null){
+				conn.close();
+				conn = null;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+}

@@ -1,0 +1,24 @@
+import java.io.File;
+import java.util.Properties;
+
+
+public class FIleFTPImportDataMain {
+
+	static int totalNowWorkCount = 0;
+		
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		if(args.length < 0){
+			return 0;
+		}
+		
+		String dbTable = "mli";
+		
+		/** DB Á¢¼Ó */
+//		File propertyFile = new File(PropertyPath.propertyPath);
+		Properties props = new Properties();
+		
+	}
+
+}

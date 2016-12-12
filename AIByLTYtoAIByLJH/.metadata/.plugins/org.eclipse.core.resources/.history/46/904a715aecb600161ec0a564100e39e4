@@ -1,0 +1,5 @@
+﻿package before.classifier;
+
+public class PropertyPath {
+	public static final String propertyPath= "C:/RMS_Classified_Data/property/classifier.properties";
+}

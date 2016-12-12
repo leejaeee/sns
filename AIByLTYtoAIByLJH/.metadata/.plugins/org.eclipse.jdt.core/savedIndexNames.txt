@@ -1,0 +1,4 @@
+INDEX VERSION 1.126+D:\workspace\AIByLTYtoAIByLJH\.metadata\.plugins\org.eclipse.jdt.core
+4204782939.index
+2390586182.index
+3271193799.index

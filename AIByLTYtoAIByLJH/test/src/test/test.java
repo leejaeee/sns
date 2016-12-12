@@ -1,0 +1,9 @@
+package test;
+
+public class test {
+	public static void main(String[] args) {
+		String t = "mli_data_importing";
+		
+		System.out.println(t.indexOf("mli"));
+	}
+}

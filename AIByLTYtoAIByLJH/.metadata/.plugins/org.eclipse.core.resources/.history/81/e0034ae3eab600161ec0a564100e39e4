@@ -1,0 +1,10 @@
+package database;
+
+import java.util.Properties;
+
+public class DBConnect {
+	
+	public void initDB(String dbType, Properties props){
+		
+	}
+}

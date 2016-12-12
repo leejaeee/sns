@@ -1,0 +1,48 @@
+package etc;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Properties;
+
+public class DBConnect {
+	
+	Connection conn;
+	PreparedStatement psmt;
+	ResultSet rs;
+	
+	
+	public void initDB(String dbType, Properties props){
+		try {
+			if("mysql".equals(dbType)){
+				
+				Class.forName(props.getProperty("mysql.jdbc.driverClassName"));
+				
+				conn = null;
+				conn = DriverManager.getConnection(
+						props.getProperty("mysql.jdbc.url"),
+						props.getProperty("mysql.jdbc.username"),
+						props.getProperty("mysql.jdbc.password"));
+				System.out.println("Mysql DB Connect..");
+			}else if("oracle".equals(dbType)){
+				Class.forName(props.getProperty("oracle.jdbc.driverClassName"));
+				
+				conn = null;
+				conn = DriverManager.getConnection(
+						props.getProperty("oracle.jdbc.url"),
+						props.getProperty("oracle.jdbc.username"),
+						props.getProperty("oracle.jdbc.password"));
+				System.out.println("Oracle DB Connect..");
+			}else{
+				System.out.println("Err : InitDB Type Input Error");
+			}
+		
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+}
